@@ -1,0 +1,108 @@
+version: "3.8"
+
+services:
+  nats:
+    image: nats
+    container_name: nats_container
+    ports:
+      - "4222:4222"
+    networks:
+      - microservices-network
+
+  users-db:
+    image: postgres
+    container_name: users_postgres_db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: users_db
+    volumes:
+      - users_postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  products-db:
+    image: postgres
+    container_name: products_postgres_db
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: products_db
+    volumes:
+      - products_postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  http-api-gateway:
+    build:
+      context: ./http-api-gateway
+      dockerfile: Dockerfile
+    container_name: http_api_gateway_container
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./http-api-gateway:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./http-api-gateway/.env
+    depends_on:
+      - nats
+      - products-microservice
+      - users-microservice
+    networks:
+      - microservices-network
+
+  users-microservice:
+    build:
+      context: ./users-microservice
+      dockerfile: Dockerfile
+    container_name: users_microservice_container
+    volumes:
+      - ./users-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./users-microservice/.env
+    depends_on:
+      - nats
+      - users-db
+    networks:
+      - microservices-network
+
+  products-microservice:
+    build:
+      context: ./products-microservice
+      dockerfile: Dockerfile
+    container_name: products_microservice_container
+    volumes:
+      - ./products-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./products-microservice/.env
+    depends_on:
+      - nats
+      - products-db
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  users_postgres_data:
+  products_postgres_data:
