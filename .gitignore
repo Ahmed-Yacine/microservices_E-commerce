@@ -1,0 +1,316 @@
+# ==================================
+# 🚫 MICROSERVICES PROJECT GITIGNORE
+# ==================================
+
+# ==================
+# 📦 Dependencies
+# ==================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.yarn/
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# ==================
+# 🔧 Build & Dist
+# ==================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist/
+.serverless/
+.fusebox/
+
+# ==================
+# 🎯 TypeScript
+# ==================
+*.tsbuildinfo
+.tscache/
+tsconfig.tsbuildinfo
+
+# ==================
+# 🌐 Environment Variables
+# ==================
+.env
+.env.*
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+.env.staging.local
+.env.*.local
+
+# Service-specific environment files
+**/.env
+**/.env.*
+**/config/.env
+**/config/.env.*
+
+# ==================
+# 📋 Logs
+# ==================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ==================
+# 🐳 Docker
+# ==================
+.dockerignore
+docker-compose.override.yml
+.docker/
+**/Dockerfile.dev
+**/Dockerfile.local
+
+# ==================
+# 🗄️ Database
+# ==================
+*.sqlite
+*.sqlite3
+*.db
+*.db3
+database.json
+prisma/migrations/
+*.sql
+db-data/
+
+# ==================
+# 🧪 Testing
+# ==================
+coverage/
+.nyc_output/
+.coverage/
+junit.xml
+test-results/
+*.lcov
+.jest/
+
+# ==================
+# 📊 Monitoring & Analytics
+# ==================
+.newrelic_agent.log
+newrelic_agent.log
+
+# ==================
+# 🔐 Security & Secrets
+# ==================
+.secrets/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.json
+.vault/
+
+# ==================
+# 💾 Cache & Temp
+# ==================
+.cache/
+.tmp/
+.temp/
+tmp/
+temp/
+.eslintcache
+.parcel-cache/
+.vite/
+.turbo/
+
+# ==================
+# 🔧 IDE & Editors
+# ==================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains
+.idea/
+*.swp
+*.swo
+*~
+
+# Vim
+*.swp
+*.swo
+.vimrc.local
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# ==================
+# 📱 OS Generated
+# ==================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==================
+# 🚀 Deployment
+# ==================
+.vercel/
+.netlify/
+.firebase/
+.aws/
+.gcp/
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# ==================
+# 📦 Package Managers
+# ==================
+.pnp.*
+.yarn-integrity
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+.yarnrc
+
+# ==================
+# 🔍 Linting & Formatting
+# ==================
+.eslintcache
+.stylelintcache
+.prettiercache
+
+# ==================
+# 📈 Performance
+# ==================
+.clinic/
+.0x/
+flamegraph.html
+
+# ==================
+# 🧩 Microservices Specific
+# ==================
+# Service-specific build artifacts
+**/dist/
+**/build/
+**/coverage/
+
+# Inter-service communication logs
+service-logs/
+api-logs/
+
+# Load balancer configs (if auto-generated)
+nginx.conf.generated
+haproxy.cfg.generated
+
+# Service discovery temp files
+.consul/
+.eureka/
+
+# ==================
+# 🔧 Development Tools
+# ==================
+.storybook/
+chromatic-build/
+.chromatic/
+
+# ==================
+# 📚 Documentation
+# ==================
+.docusaurus/
+docs/build/
+.vuepress/dist/
+
+# ==================
+# 🎨 Assets & Media
+# ==================
+# Ignore large media files that shouldn't be in git
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mkv
+
+# Large images (keep smaller ones)
+*.tiff
+*.bmp
+*.psd
+*.ai
+
+# ==================
+# 🧪 Local Development
+# ==================
+.local/
+.dev/
+playground/
+sandbox/
+scratch/
+
+# ==================
+# 📋 Misc
+# ==================
+.history/
+.vscode-test/
+*.tgz
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# Custom ignore patterns (add your specific needs below)
+# ==================
+# 🎯 Custom Patterns
+# ==================
+# Add your project-specific ignores here
