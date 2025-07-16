@@ -58,6 +58,11 @@ tsconfig.tsbuildinfo
 **/config/.env
 **/config/.env.*
 
+# BUT keep example files for team setup
+!.env.example
+!**/.env.example
+!**/config/.env.example
+
 # ==================
 # 📋 Logs
 # ==================
