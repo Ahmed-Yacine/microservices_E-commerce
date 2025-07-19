@@ -19,6 +19,3 @@ COPY . .
 
 # Generate Prisma client (important for NestJS + Prisma)
 RUN npx prisma generate
-
-# Create uploads directory for file uploads (if needed)
-RUN mkdir -p uploads

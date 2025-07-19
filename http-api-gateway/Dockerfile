@@ -14,9 +14,6 @@ RUN npm install -g @nestjs/cli
 # Copy source code
 COPY . .
 
-# Create uploads directory for file uploads (if needed)
-RUN mkdir -p uploads
-
 # Expose port
 EXPOSE 3000
 

@@ -45,6 +45,96 @@ services:
       timeout: 5s
       retries: 5
 
+  payments-db:
+    image: postgres
+    container_name: payments_postgres_db
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: payments_db
+    volumes:
+      - payments_postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  orders-db:
+    image: postgres
+    container_name: orders_postgres_db
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: orders_db
+    volumes:
+      - orders_postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  notifications-db:
+    image: postgres
+    container_name: notifications_postgres_db
+    ports:
+      - "5437:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: notifications_db
+    volumes:
+      - notifications_postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  inventories-db:
+    image: postgres
+    container_name: inventories_postgres_db
+    ports:
+      - "5438:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: inventories_db
+    volumes:
+      - inventories_postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  filesUpload-db:
+    image: postgres
+    container_name: filesUpload_postgres_db
+    ports:
+      - "5439:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: filesUpload_db
+    volumes:
+      - filesUpload_postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   http-api-gateway:
     build:
       context: ./http-api-gateway
@@ -99,10 +189,102 @@ services:
     networks:
       - microservices-network
 
+  payments-microservice:
+    build:
+      context: ./payments-microservice
+      dockerfile: Dockerfile
+    container_name: payments_microservice_container
+    volumes:
+      - ./payments-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./payments-microservice/.env
+    depends_on:
+      - nats
+      - payments-db
+    networks:
+      - microservices-network
+
+  orders-microservice:
+    build:
+      context: ./orders-microservice
+      dockerfile: Dockerfile
+    container_name: orders_microservice_container
+    volumes:
+      - ./orders-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./orders-microservice/.env
+    depends_on:
+      - nats
+      - orders-db
+    networks:
+      - microservices-network
+
+  notifications-microservice:
+    build:
+      context: ./notifications-microservice
+      dockerfile: Dockerfile
+    container_name: notifications_microservice_container
+    volumes:
+      - ./notifications-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./notifications-microservice/.env
+    depends_on:
+      - nats
+      - notifications-db
+    networks:
+      - microservices-network
+
+  inventory-microservice:
+    build:
+      context: ./inventory-microservice
+      dockerfile: Dockerfile
+    container_name: inventory_microservice_container
+    volumes:
+      - ./inventory-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./inventory-microservice/.env
+    depends_on:
+      - nats
+      - inventories-db
+    networks:
+      - microservices-network
+
+  files-upload-microservice:
+    build:
+      context: ./files-upload-microservice
+      dockerfile: Dockerfile
+    container_name: files-upload_microservice_container
+    volumes:
+      - ./files-upload-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./files-upload-microservice/.env
+    depends_on:
+      - nats
+      - filesUpload-db
+    networks:
+      - microservices-network
+
 networks:
   microservices-network:
     driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
 
 volumes:
   users_postgres_data:
   products_postgres_data:
+  payments_postgres_data:
+  orders_postgres_data:
+  notifications_postgres_data:
+  inventories_postgres_data:
+  filesUpload_postgres_data:

@@ -6,3 +6,35 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int          @id @default(autoincrement())
+  email     String       @unique
+  password  String
+  firstName String
+  lastName  String
+  role      UserRole     @default(CUSTOMER)
+  profile   UserProfile?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("users")
+}
+
+model UserProfile {
+  id      Int     @id @default(autoincrement())
+  userId  Int     @unique
+  user    User    @relation(fields: [userId], references: [id])
+  phone   String?
+  address String?
+  city    String?
+  country String?
+
+  @@map("users-profiles")
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  SELLER
+}
