@@ -13,16 +13,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       },
     ]),
   ],
-  exports: [
-    ClientsModule.register([
-      {
-        name: 'NATS_SERVICE',
-        transport: Transport.NATS,
-        options: {
-          servers: ['nats://nats'],
-        },
-      },
-    ]),
-  ],
+  exports: [ClientsModule],
 })
 export class NatsClientModule {}
