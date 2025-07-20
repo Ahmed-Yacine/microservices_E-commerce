@@ -1,9 +1,24 @@
+// File Service - schema.prisma
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model File {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  entityType   String // e.g., "product", "user", "order"
+  entityId     String // ID of the related entity
+  uploadedAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@map("files")
 }

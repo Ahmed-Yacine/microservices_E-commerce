@@ -1,9 +1,43 @@
+// Notifications Service - schema.prisma
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum NotificationType {
+  ORDER_CONFIRMATION
+  PAYMENT_SUCCESS
+  SHIPPING_UPDATE
+  PROMOTION
+  SYSTEM_ALERT
+  LOW_STOCK
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String // Foreign key to Users service
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id     String           @id @default(cuid())
+  userId String // Foreign key to Users service
+  type   NotificationType
+  email  Boolean          @default(true)
+  push   Boolean          @default(true)
+  sms    Boolean          @default(false)
+
+  @@unique([userId, type])
+  @@map("notification_preferences")
 }

@@ -1,3 +1,4 @@
+// Products Service - schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,36 +9,42 @@ datasource db {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
+  id          String   @id @default(cuid())
   name        String
   description String
-  price       Decimal
-  userId      Int // Reference to user, but no foreign key
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  Category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  Int?
-  Review      Review[]
+  price       Decimal  @db.Decimal(10, 2)
+  categoryId  String
+  images      String[] // Array of image URLs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id])
+  reviews  Review[]
 
   @@map("products")
 }
 
 model Category {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
+  id   String @id @default(cuid())
+  name String @unique
+
+  // Relations
   products Product[]
 
   @@map("categories")
 }
 
 model Review {
-  id        Int      @id @default(autoincrement())
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
-  userId    Int
+  id        String   @id @default(cuid())
+  productId String
+  userId    String // Foreign key to Users service
   rating    Int      @db.SmallInt
-  comment   String?
+  comment   String
   createdAt DateTime @default(now())
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("reviews")
 }

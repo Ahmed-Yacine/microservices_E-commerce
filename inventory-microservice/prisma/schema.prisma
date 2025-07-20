@@ -1,9 +1,53 @@
+// Inventory Service - schema.prisma
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Inventory {
+  id                String   @id @default(cuid())
+  productId         String   @unique // Foreign key to Products service
+  stockQuantity     Int
+  reservedQuantity  Int      @default(0)
+  availableQuantity Int // Computed: stockQuantity - reservedQuantity
+  minStockLevel     Int
+  warehouseId       String
+  lastUpdated       DateTime @updatedAt
+
+  // Relations
+  warehouse         Warehouse          @relation(fields: [warehouseId], references: [id])
+  stockReservations StockReservation[]
+
+  @@map("inventories")
+}
+
+model Warehouse {
+  id      String @id @default(cuid())
+  name    String
+  address String
+  city    String
+  country String
+
+  // Relations
+  inventories Inventory[]
+
+  @@map("warehouses")
+}
+
+model StockReservation {
+  id          String   @id @default(cuid())
+  inventoryId String
+  orderId     String // Foreign key to Orders service
+  quantity    Int
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  // Relations
+  inventory Inventory @relation(fields: [inventoryId], references: [id])
+
+  @@map("stock_reservations")
 }

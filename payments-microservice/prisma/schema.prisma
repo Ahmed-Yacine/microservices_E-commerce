@@ -1,9 +1,74 @@
+// Payments Service - schema.prisma
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+enum PaymentType {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  BANK_TRANSFER
+  DIGITAL_WALLET
+}
+
+enum RefundStatus {
+  REQUESTED
+  PROCESSING
+  COMPLETED
+  REJECTED
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  orderId       String        @unique // Foreign key to Orders service
+  amount        Decimal       @db.Decimal(10, 2)
+  status        PaymentStatus
+  method        PaymentType
+  transactionId String?
+  processedAt   DateTime?
+  createdAt     DateTime      @default(now())
+
+  // Relations
+  refunds Refund[]
+
+  @@map("payments")
+}
+
+model PaymentMethod {
+  id        String      @id @default(cuid())
+  userId    String // Foreign key to Users service
+  type      PaymentType
+  details   String // Encrypted payment details
+  isDefault Boolean     @default(false)
+  createdAt DateTime    @default(now())
+
+  @@map("payment_methods")
+}
+
+model Refund {
+  id          String       @id @default(cuid())
+  paymentId   String
+  amount      Decimal      @db.Decimal(10, 2)
+  status      RefundStatus
+  reason      String
+  processedAt DateTime?
+  createdAt   DateTime     @default(now())
+
+  // Relations
+  payment Payment @relation(fields: [paymentId], references: [id])
+
+  @@map("refunds")
 }
