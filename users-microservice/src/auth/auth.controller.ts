@@ -5,6 +5,7 @@ import { Controller, UseFilters } from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
+import { VerifyCodeDto } from './dtos/verificationCode.dto';
 
 @Controller()
 @UseFilters(new AllRpcExceptionsFilter())
@@ -24,5 +25,10 @@ export class AuthController {
   @MessagePattern('auth.resetPassword')
   async handelResetPassword(@Payload() Payload: ResetPasswordDto) {
     return await this.authService.resetPassword(Payload);
+  }
+
+  @MessagePattern('auth.verifyCode')
+  async handelVerifyCode(@Payload() Payload: VerifyCodeDto) {
+    return await this.authService.VerifyCode(Payload);
   }
 }

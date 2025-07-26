@@ -7,6 +7,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { LoginDto } from './dtos/login.dto';
 import * as bcrypt from 'bcrypt';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
+import { VerifyCodeDto } from './dtos/verificationCode.dto';
 
 @Injectable()
 export class AuthService {
@@ -211,6 +212,60 @@ export class AuthService {
       throw new RpcException({
         statusCode: 500,
         message: 'Failed to sent the Verification code',
+        error: 'Internal Server Error',
+      });
+    }
+  }
+
+  async VerifyCode(verifyCodeDto: VerifyCodeDto) {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { email: verifyCodeDto.email },
+        select: { verificationCode: true },
+      });
+
+      if (!user) {
+        throw new RpcException({
+          statusCode: 404,
+          message: 'User not found',
+          error: 'Not Found',
+        });
+      }
+
+      if (user.verificationCode !== verifyCodeDto.code) {
+        throw new RpcException({
+          statusCode: 400,
+          message: 'Invalid code',
+          error: 'Bad Request',
+        });
+      }
+
+      // Clear the verification code after successful verification
+      await this.prismaService.user.update({
+        where: { email: verifyCodeDto.email },
+        data: { verificationCode: null },
+      });
+
+      return {
+        message: 'Code verified successfully',
+      };
+    } catch (error) {
+      if (error instanceof RpcException) {
+        throw error;
+      }
+
+      if (error.name === 'ValidationError') {
+        throw new RpcException({
+          statusCode: 400,
+          message: error.message,
+          error: 'Bad Request',
+        });
+      }
+
+      // Generic error
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Failed to verify code',
         error: 'Internal Server Error',
       });
     }

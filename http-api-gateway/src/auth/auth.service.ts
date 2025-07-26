@@ -5,6 +5,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { LoginDto } from './dtos/login.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
+import { VerifyCodeDto } from './dtos/verificationCode.dto';
 
 @Injectable()
 export class AuthService {
@@ -73,6 +74,17 @@ export class AuthService {
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
     return await firstValueFrom(
       this.natsClient.send('auth.resetPassword', resetPasswordDto).pipe(
+        timeout(5000), // 5 second timeout
+        catchError((error) => {
+          return throwError(() => error);
+        }),
+      ),
+    );
+  }
+
+  async verifyCode(verifyCodeDto: VerifyCodeDto) {
+    return await firstValueFrom(
+      this.natsClient.send('auth.verifyCode', verifyCodeDto).pipe(
         timeout(5000), // 5 second timeout
         catchError((error) => {
           return throwError(() => error);
