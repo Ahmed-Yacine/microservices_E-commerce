@@ -172,12 +172,17 @@ export class AuthService {
       }
 
       await firstValueFrom(
-        this.natsClient.emit('sent.verificationCode', resetPasswordDto).pipe(
-          timeout(5000), // 5 second timeout
-          catchError((error) => {
-            return throwError(() => error);
-          }),
-        ),
+        this.natsClient
+          .emit('sent.verificationCode', {
+            email: resetPasswordDto.email,
+            verificationCode,
+          })
+          .pipe(
+            timeout(5000), // 5 second timeout
+            catchError((error) => {
+              return throwError(() => error);
+            }),
+          ),
       );
 
       // Update the user's verification code
