@@ -8,6 +8,7 @@ import { LoginDto } from './dtos/login.dto';
 import * as bcrypt from 'bcrypt';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { VerifyCodeDto } from './dtos/verificationCode.dto';
+import { ChangePasswordDto } from './dtos/changePassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -266,6 +267,60 @@ export class AuthService {
       throw new RpcException({
         statusCode: 500,
         message: 'Failed to verify code',
+        error: 'Internal Server Error',
+      });
+    }
+  }
+
+  async changePassword(changePasswordDto: ChangePasswordDto) {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { email: changePasswordDto.email },
+      });
+
+      if (!user) {
+        throw new RpcException({
+          statusCode: 404,
+          message: 'User not found',
+          error: 'Not Found',
+        });
+      }
+
+      const password = await bcrypt.hash(changePasswordDto.password, 12);
+
+      const updatedUser = await this.prismaService.user.update({
+        where: { email: changePasswordDto.email },
+        data: { password },
+      });
+
+      if (!updatedUser) {
+        throw new RpcException({
+          statusCode: 500,
+          message: 'Failed to change password',
+          error: 'Internal Server Error',
+        });
+      }
+
+      return {
+        message: 'Password changed successfully, please login again',
+      };
+    } catch (error) {
+      if (error instanceof RpcException) {
+        throw error;
+      }
+
+      if (error.name === 'ValidationError') {
+        throw new RpcException({
+          statusCode: 400,
+          message: error.message,
+          error: 'Bad Request',
+        });
+      }
+
+      // Generic error
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Failed to change password',
         error: 'Internal Server Error',
       });
     }

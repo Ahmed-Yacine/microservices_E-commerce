@@ -6,6 +6,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { VerifyCodeDto } from './dtos/verificationCode.dto';
+import { ChangePasswordDto } from './dtos/changePassword.dto';
 
 @Controller()
 @UseFilters(new AllRpcExceptionsFilter())
@@ -30,5 +31,10 @@ export class AuthController {
   @MessagePattern('auth.verifyCode')
   async handelVerifyCode(@Payload() Payload: VerifyCodeDto) {
     return await this.authService.VerifyCode(Payload);
+  }
+
+  @MessagePattern('auth.changePassword')
+  async handelChangePassword(@Payload() Payload: ChangePasswordDto) {
+    return await this.authService.changePassword(Payload);
   }
 }

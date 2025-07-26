@@ -5,6 +5,7 @@ import { TokenPayloadDto } from './dtos/token-payload.dto';
 import { LoginDto } from './dtos/login.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
 import { VerifyCodeDto } from './dtos/verificationCode.dto';
+import { ChangePasswordDto } from './dtos/changePassword.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,9 +29,15 @@ export class AuthController {
     return this.authService.resetPassword(resetPasswordDto);
   }
 
-  @HttpCode(HttpStatus.OK)
   @Post('verify-code')
+  @HttpCode(HttpStatus.OK)
   async verifyCode(@Body() verifyCodeDto: VerifyCodeDto) {
     return this.authService.verifyCode(verifyCodeDto);
+  }
+
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  public async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
+    return this.authService.changePassword(changePasswordDto);
   }
 }
