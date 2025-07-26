@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { VerifyCodeDto } from './dtos/verificationCode.dto';
 import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { GoogleUser } from './interfaces/google-user.interface';
 
 @Controller()
 @UseFilters(new AllRpcExceptionsFilter())
@@ -36,5 +37,10 @@ export class AuthController {
   @MessagePattern('auth.changePassword')
   async handelChangePassword(@Payload() Payload: ChangePasswordDto) {
     return await this.authService.changePassword(Payload);
+  }
+
+  @MessagePattern('auth.googleValidate')
+  async handleGoogleValidate(@Payload() payload: GoogleUser) {
+    return await this.authService.googleValidate(payload);
   }
 }

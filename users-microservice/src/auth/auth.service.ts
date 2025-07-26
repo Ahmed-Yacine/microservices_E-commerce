@@ -5,10 +5,11 @@ import { UserRole } from './interfaces/user-role.enum';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RegisterDto } from './dtos/register.dto';
 import { LoginDto } from './dtos/login.dto';
-import * as bcrypt from 'bcrypt';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { VerifyCodeDto } from './dtos/verificationCode.dto';
 import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { GoogleUser } from './interfaces/google-user.interface';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -321,6 +322,60 @@ export class AuthService {
       throw new RpcException({
         statusCode: 500,
         message: 'Failed to change password',
+        error: 'Internal Server Error',
+      });
+    }
+  }
+
+  async googleValidate(googleUser: GoogleUser) {
+    try {
+      // Check if user already exists
+      let user = await this.prismaService.user.findUnique({
+        where: { email: googleUser.email },
+      });
+
+      if (!user) {
+        // Create new user with Google data
+        user = await this.prismaService.user.create({
+          data: {
+            email: googleUser.email,
+            firstName: googleUser.firstName,
+            lastName: googleUser.lastName,
+            password: '', // Google users don't need a password
+            role: UserRole.CUSTOMER, // Default role for Google users
+          },
+        });
+      }
+
+      // Return user data for JWT token generation
+      return {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
+    } catch (error) {
+      if (error instanceof RpcException) {
+        throw error;
+      }
+
+      // Handle Prisma errors
+      if (error.code === 'P2002') {
+        // Prisma unique constraint error
+        throw new RpcException({
+          statusCode: 409,
+          message: 'User with this email already exists',
+          error: 'CONFLICT',
+        });
+      }
+
+      // Generic error
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Failed to validate Google user',
         error: 'Internal Server Error',
       });
     }

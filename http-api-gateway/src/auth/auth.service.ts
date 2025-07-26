@@ -7,6 +7,7 @@ import { LoginDto } from './dtos/login.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
 import { VerifyCodeDto } from './dtos/verificationCode.dto';
 import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { GoogleUser } from './interfaces/google-user.interface';
 
 @Injectable()
 export class AuthService {
@@ -103,5 +104,33 @@ export class AuthService {
         }),
       ),
     );
+  }
+
+  async valideUser(userData: GoogleUser) {
+    // Send Google user validation request to user microservice
+    const user = await firstValueFrom(
+      this.natsClient.send('auth.googleValidate', userData).pipe(
+        timeout(5000), // 5 second timeout
+        catchError((error) => {
+          return throwError(() => error);
+        }),
+      ),
+    );
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
+
+    const access_token = this.jwtService.sign(payload);
+
+    return {
+      user: user,
+      access_token,
+      expires_in: 86400, // 1 day in seconds
+    };
   }
 }
