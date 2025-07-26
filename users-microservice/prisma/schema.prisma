@@ -15,14 +15,15 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  firstName String
-  lastName  String
-  role      UserRole
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(cuid())
+  email            String   @unique
+  password         String
+  firstName        String
+  lastName         String
+  verificationCode String?
+  role             UserRole
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   // Relations
   profile UserProfile?
@@ -31,8 +32,8 @@ model User {
 }
 
 model UserProfile {
-  id      String @id @default(cuid())
-  userId  String @unique
+  id      String  @id @default(cuid())
+  userId  String  @unique
   phone   String?
   address String?
   city    String?

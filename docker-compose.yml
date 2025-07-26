@@ -274,12 +274,28 @@ services:
     networks:
       - microservices-network
 
+  email-sms-microservice:
+    build:
+      context: ./email-sms-microservice
+      dockerfile: Dockerfile
+    container_name: email-sms-microservice_container
+    volumes:
+      - ./email-sms-microservice:/app
+      - /app/node_modules
+    command: npm run start:dev
+    env_file:
+      - ./email-sms-microservice/.env
+    depends_on:
+      - nats
+    networks:
+      - microservices-network
+
 networks:
   microservices-network:
     driver: bridge
     driver_opts:
       com.docker.network.driver.mtu: 1450
-
+  
 volumes:
   users_postgres_data:
   products_postgres_data:

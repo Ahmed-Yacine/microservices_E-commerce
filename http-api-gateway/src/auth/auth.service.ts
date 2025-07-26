@@ -4,6 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { RegisterDto } from './dtos/register.dto';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { LoginDto } from './dtos/login.dto';
+import { ResetPasswordDto } from './dtos/resetPassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -67,5 +68,16 @@ export class AuthService {
       access_token,
       expires_in: 86400, // 1 day in seconds
     };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    return await firstValueFrom(
+      this.natsClient.send('auth.resetPassword', resetPasswordDto).pipe(
+        timeout(5000), // 5 second timeout
+        catchError((error) => {
+          return throwError(() => error);
+        }),
+      ),
+    );
   }
 }

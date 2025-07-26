@@ -1,8 +1,9 @@
-import { Controller, UseFilters } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { RegisterDto } from './dtos/register.dto';
 import { AllRpcExceptionsFilter } from '../common/filters/rpc-exception.filter';
+import { ResetPasswordDto } from './dtos/resetPassword.dto';
+import { Controller, UseFilters } from '@nestjs/common';
+import { RegisterDto } from './dtos/register.dto';
+import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 
 @Controller()
@@ -11,12 +12,17 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @MessagePattern('auth.register')
-  async handleRegister(@Payload() payload: RegisterDto) {
-    return await this.authService.register(payload);
+  async handleRegister(@Payload() Payload: RegisterDto) {
+    return await this.authService.register(Payload);
   }
 
   @MessagePattern('auth.login')
-  async handelLogin(@Payload() payload: LoginDto) {
-    return await this.authService.login(payload);
+  async handelLogin(@Payload() Payload: LoginDto) {
+    return await this.authService.login(Payload);
+  }
+
+  @MessagePattern('auth.resetPassword')
+  async handelResetPassword(@Payload() Payload: ResetPasswordDto) {
+    return await this.authService.resetPassword(Payload);
   }
 }
