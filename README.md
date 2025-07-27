@@ -45,11 +45,11 @@ graph TB
         Client[🌐 Client Applications]
         Admin[👨‍💼 Admin Dashboard]
     end
-    
+
     subgraph "API Gateway Layer"
         Gateway[🚪 HTTP API Gateway<br/>Port: 3000]
     end
-    
+
     subgraph "Microservices Layer"
         Users[👥 Users Service<br/>Port: 3001]
         Products[📦 Products Service<br/>Port: 3002]
@@ -60,11 +60,11 @@ graph TB
         Files[📁 Files Service<br/>Port: 3007]
         EmailSMS[📧 Email/SMS Service<br/>Port: 3008]
     end
-    
+
     subgraph "Message Broker"
         NATS[⚡ NATS Message Broker<br/>Port: 4222]
     end
-    
+
     subgraph "Database Layer"
         UsersDB[(👥 Users DB<br/>Port: 5433)]
         ProductsDB[(📦 Products DB<br/>Port: 5434)]
@@ -74,16 +74,16 @@ graph TB
         NotificationsDB[(🔔 Notifications DB<br/>Port: 5438)]
         FilesDB[(📁 Files DB<br/>Port: 5439)]
     end
-    
+
     Client --> Gateway
     Admin --> Gateway
-    
+
     Gateway --> Users
     Gateway --> Products
     Gateway --> Orders
     Gateway --> Payments
     Gateway --> Files
-    
+
     Users --> NATS
     Products --> NATS
     Orders --> NATS
@@ -91,7 +91,7 @@ graph TB
     Inventory --> NATS
     Notifications --> NATS
     EmailSMS --> NATS
-    
+
     Users --> UsersDB
     Products --> ProductsDB
     Orders --> OrdersDB
@@ -109,16 +109,16 @@ graph TB
 
 <div align="center">
 
-| Category | Technologies |
-|----------|-------------|
-| **Backend Framework** | ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white) |
-| **Language** | ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white) |
-| **Database** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white) |
-| **ORM** | ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=flat&logo=Prisma&logoColor=white) |
-| **Message Broker** | ![NATS](https://img.shields.io/badge/NATS-199bfc?style=flat&logo=nats&logoColor=white) |
-| **Containerization** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) |
-| **Authentication** | ![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=JSON%20web%20tokens) |
-| **API Documentation** | ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=black) |
+| Category              | Technologies                                                                                             |
+| --------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Backend Framework** | ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)             |
+| **Language**          | ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white) |
+| **Database**          | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white) |
+| **ORM**               | ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=flat&logo=Prisma&logoColor=white)             |
+| **Message Broker**    | ![NATS](https://img.shields.io/badge/NATS-199bfc?style=flat&logo=nats&logoColor=white)                   |
+| **Containerization**  | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)             |
+| **Authentication**    | ![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=JSON%20web%20tokens)                       |
+| **API Documentation** | ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=black)          |
 
 </div>
 
@@ -127,6 +127,7 @@ graph TB
 ## 📋 Features
 
 ### 🔐 Authentication & User Management
+
 - ✅ **User Registration & Login** with email verification
 - ✅ **JWT-based Authentication** with role-based access control
 - ✅ **Password Management** (reset, change, strength validation)
@@ -134,6 +135,7 @@ graph TB
 - ✅ **Multi-role Support** (Customer, Admin, Seller)
 
 ### 🛍️ Product Catalog
+
 - ✅ **Product Management** (CRUD operations)
 - ✅ **Category System** with hierarchical structure
 - ✅ **Product Reviews & Ratings** with moderation
@@ -141,30 +143,35 @@ graph TB
 - ✅ **Image Management** with multiple photos per product
 
 ### 🛒 Shopping Experience
+
 - ✅ **Shopping Cart** with persistent storage
 - ✅ **Order Management** with status tracking
 - ✅ **Order History** with detailed information
 - ✅ **Order Cancellation** with automatic stock release
 
 ### 💳 Payment Processing
+
 - ✅ **Multiple Payment Methods** (Credit Card, PayPal, Digital Wallets)
 - ✅ **Secure Payment Processing** with encryption
 - ✅ **Refund Management** with partial refund support
 - ✅ **Payment Method Storage** for quick checkout
 
 ### 📊 Inventory Management
+
 - ✅ **Real-time Stock Tracking** across multiple warehouses
 - ✅ **Stock Reservations** for pending orders
 - ✅ **Low Stock Alerts** with automatic notifications
 - ✅ **Stock Movement History** for audit trails
 
 ### 🔔 Notifications
+
 - ✅ **Multi-channel Notifications** (Email, SMS, In-app)
 - ✅ **User Preferences** for notification types
 - ✅ **Order Updates** (confirmation, shipping, delivery)
 - ✅ **Admin Alerts** (low stock, system issues)
 
 ### 📁 File Management
+
 - ✅ **File Upload** with validation and processing
 - ✅ **Image Optimization** with multiple sizes
 - ✅ **Cloud Storage Integration** (AWS S3, Google Cloud)
@@ -184,24 +191,28 @@ graph TB
 ### 🔧 Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/Ahmed-Yacine/microservices_project.git
 cd microservices_e-commerce
 ```
 
 2. **Start the infrastructure**
+
 ```bash
 # Start databases and message broker
 docker-compose up -d nats users-db products-db orders-db payments-db inventory-db notifications-db files-db
 ```
 
 3. **Install dependencies for each service**
+
 ```bash
 # Install dependencies for all services
 ./scripts/install-dependencies.sh
 ```
 
 4. **Set up environment variables**
+
 ```bash
 # Copy environment templates
 cp .env.example .env
@@ -209,12 +220,14 @@ cp .env.example .env
 ```
 
 5. **Run database migrations**
+
 ```bash
 # Run migrations for all services
 ./scripts/migrate-databases.sh
 ```
 
 6. **Start all services**
+
 ```bash
 # Start all microservices
 ./start-services.sh
@@ -222,11 +235,11 @@ cp .env.example .env
 
 ### 🌐 Access Points
 
-| Service | URL | Description |
-|---------|-----|-------------|
-| **API Gateway** | http://localhost:3000 | Main API endpoint |
-| **Swagger Docs** | http://localhost:3000/api | API documentation |
-| **NATS Dashboard** | http://localhost:8222 | Message broker monitoring |
+| Service            | URL                       | Description               |
+| ------------------ | ------------------------- | ------------------------- |
+| **API Gateway**    | http://localhost:3000     | Main API endpoint         |
+| **Swagger Docs**   | http://localhost:3000/api | API documentation         |
+| **NATS Dashboard** | http://localhost:8222     | Message broker monitoring |
 
 ---
 
@@ -238,12 +251,14 @@ cp .env.example .env
 **Port:** 3001 | **Database:** users-db (5433)
 
 **Responsibilities:**
+
 - User registration and authentication
 - JWT token management
 - User profile and address management
 - Role-based access control
 
 **Key Endpoints:**
+
 ```
 POST /auth/register     - User registration
 POST /auth/login       - User login
@@ -260,12 +275,14 @@ POST /users/addresses  - Add user address
 **Port:** 3002 | **Database:** products-db (5434)
 
 **Responsibilities:**
+
 - Product catalog management
 - Category management
 - Product reviews and ratings
 - Search and filtering
 
 **Key Endpoints:**
+
 ```
 GET  /products         - List products
 GET  /products/:id     - Get product details
@@ -282,12 +299,14 @@ POST /products/:id/reviews - Add review
 **Port:** 3003 | **Database:** orders-db (5435)
 
 **Responsibilities:**
+
 - Shopping cart management
 - Order processing and tracking
 - Order status management
 - Order history
 
 **Key Endpoints:**
+
 ```
 POST /cart/items       - Add to cart
 GET  /cart            - Get cart
@@ -304,12 +323,14 @@ PUT  /orders/:id/cancel - Cancel order
 **Port:** 3004 | **Database:** payments-db (5436)
 
 **Responsibilities:**
+
 - Payment processing
 - Payment method management
 - Refund processing
 - Transaction tracking
 
 **Key Events:**
+
 ```
 payment.process       - Process payment
 payment.add-method    - Add payment method
@@ -324,12 +345,14 @@ payment.process-refund - Process refund
 **Port:** 3005 | **Database:** inventory-db (5437)
 
 **Responsibilities:**
+
 - Stock level management
 - Stock reservations
 - Warehouse management
 - Low stock alerts
 
 **Key Events:**
+
 ```
 inventory.get-stock     - Get stock levels
 inventory.reserve-stock - Reserve stock
@@ -344,12 +367,14 @@ inventory.update-stock  - Update stock
 **Port:** 3006 | **Database:** notifications-db (5438)
 
 **Responsibilities:**
+
 - Notification management
 - User preferences
 - Multi-channel delivery
 - Notification history
 
 **Key Events:**
+
 ```
 notification.send       - Send notification
 notification.get-user   - Get user notifications
@@ -364,12 +389,14 @@ notification.mark-read  - Mark as read
 **Port:** 3007 | **Database:** files-db (5439)
 
 **Responsibilities:**
+
 - File upload and storage
 - Image processing
 - File metadata management
 - CDN integration
 
 **Key Endpoints:**
+
 ```
 POST /upload           - Upload file
 GET  /files/:id        - Get file
@@ -384,12 +411,14 @@ DELETE /files/:id      - Delete file
 **Port:** 3008
 
 **Responsibilities:**
+
 - Email template management
 - SMTP integration
 - SMS delivery
 - Delivery tracking
 
 **Key Events:**
+
 ```
 email.send            - Send email
 sms.send              - Send SMS
@@ -417,24 +446,28 @@ Our microservices communicate through **NATS** using an event-driven pattern:
 
 ### 🏗️ Development Phases
 
-#### 📍 **Phase 1: Core Foundation** *(In Progress)*
+#### 📍 **Phase 1: Core Foundation** _(In Progress)_
+
 - [x] Project structure setup
 - [x] Database schemas design
 - [ ] Users microservice implementation
 - [ ] Products microservice implementation
 - [ ] HTTP API Gateway implementation
 
-#### 📍 **Phase 2: E-commerce Flow** *(Planned)*
+#### 📍 **Phase 2: E-commerce Flow** _(Planned)_
+
 - [ ] Inventory microservice
 - [ ] Orders microservice
 - [ ] Payments microservice
 
-#### 📍 **Phase 3: Supporting Services** *(Planned)*
+#### 📍 **Phase 3: Supporting Services** _(Planned)_
+
 - [ ] Notifications microservice
 - [ ] Files upload microservice
 - [ ] Email/SMS microservice
 
-#### 📍 **Phase 4: Advanced Features** *(Future)*
+#### 📍 **Phase 4: Advanced Features** _(Future)_
+
 - [ ] Search & Analytics
 - [ ] Admin Dashboard
 - [ ] Mobile API optimizations
@@ -444,16 +477,19 @@ Our microservices communicate through **NATS** using an event-driven pattern:
 ## 📚 Documentation
 
 ### 📖 API Documentation
+
 - **Swagger UI**: http://localhost:3000/api
 - **Postman Collection**: [Download here](./docs/postman-collection.json)
 
 ### 🗄️ Database Schemas
+
 - [Users Schema](./users-microservice/prisma/schema.prisma)
 - [Products Schema](./products-microservice/prisma/schema.prisma)
 - [Orders Schema](./orders-microservice/prisma/schema.prisma)
 - [Payments Schema](./payments-microservice/prisma/schema.prisma)
 
 ### 🎨 Architecture Diagrams
+
 - [System Architecture](./diagrams.md)
 - [Database ERD](./docs/database-erd.md)
 - [Sequence Diagrams](./docs/sequence-diagrams.md)
@@ -479,6 +515,7 @@ npm run test:coverage
 ```
 
 ### 🧪 Test Coverage Goals
+
 - **Unit Tests**: > 80% coverage
 - **Integration Tests**: Critical user flows
 - **E2E Tests**: Complete user journeys
@@ -528,6 +565,7 @@ docker-compose -f docker-compose.prod.yml up -d
 ## 🔒 Security
 
 ### 🛡️ Security Measures
+
 - **JWT Authentication** with refresh tokens
 - **Password Hashing** using bcrypt
 - **Input Validation** with class-validator
@@ -536,6 +574,7 @@ docker-compose -f docker-compose.prod.yml up -d
 - **CORS Configuration** for browser security
 
 ### 🔐 Environment Security
+
 ```bash
 # Secure environment variables
 DATABASE_URL=postgresql://user:password@localhost:5432/db
@@ -548,12 +587,14 @@ ENCRYPTION_KEY=your-encryption-key
 ## 📈 Monitoring & Performance
 
 ### 📊 Metrics & Monitoring
+
 - **Health Checks** for all services
 - **Performance Metrics** with Prometheus
 - **Error Tracking** with Sentry
 - **Log Aggregation** with ELK Stack
 
 ### ⚡ Performance Optimizations
+
 - **Database Indexing** for fast queries
 - **Connection Pooling** for database efficiency
 - **Caching Strategies** with Redis
@@ -566,6 +607,7 @@ ENCRYPTION_KEY=your-encryption-key
 We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
 
 ### 📋 Development Guidelines
+
 1. Follow **TypeScript** best practices
 2. Write **comprehensive tests**
 3. Use **conventional commits**
@@ -573,6 +615,7 @@ We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md)
 5. Follow **code review** process
 
 ### 🐛 Reporting Issues
+
 Please use our [Issue Template](./.github/ISSUE_TEMPLATE.md) when reporting bugs.
 
 ---

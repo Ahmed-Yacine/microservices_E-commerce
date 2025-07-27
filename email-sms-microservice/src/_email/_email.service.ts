@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EmailOptions } from './interface/email.option';
 import {
-  passwordResetTemplate,
-  emailVerificationTemplate,
-  welcomeTemplate,
   accountConfirmationTemplate,
+  emailVerificationTemplate,
   passwordChangeTemplate,
+  passwordResetTemplate,
+  welcomeTemplate,
 } from './views';
 
 @Injectable()

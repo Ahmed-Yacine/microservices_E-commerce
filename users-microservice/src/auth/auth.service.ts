@@ -182,7 +182,7 @@ export class AuthService {
           })
           .pipe(
             timeout(5000), // 5 second timeout
-            catchError((error) => {
+            catchError(error => {
               return throwError(() => error);
             }),
           ),

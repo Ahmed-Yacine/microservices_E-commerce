@@ -21,7 +21,7 @@ export class AuthService {
     const user = await firstValueFrom(
       this.natsClient.send('auth.register', registerDto).pipe(
         timeout(5000), // 5 second timeout
-        catchError((error) => {
+        catchError(error => {
           // Re-throw the error so the filter can handle it
           return throwError(() => error);
         }),
@@ -50,7 +50,7 @@ export class AuthService {
     const user = await firstValueFrom(
       this.natsClient.send('auth.login', loginDto).pipe(
         timeout(5000), // 5 second timeout
-        catchError((error) => {
+        catchError(error => {
           return throwError(() => error);
         }),
       ),
@@ -77,7 +77,7 @@ export class AuthService {
     return await firstValueFrom(
       this.natsClient.send('auth.resetPassword', resetPasswordDto).pipe(
         timeout(5000), // 5 second timeout
-        catchError((error) => {
+        catchError(error => {
           return throwError(() => error);
         }),
       ),
@@ -88,7 +88,7 @@ export class AuthService {
     return await firstValueFrom(
       this.natsClient.send('auth.verifyCode', verifyCodeDto).pipe(
         timeout(5000), // 5 second timeout
-        catchError((error) => {
+        catchError(error => {
           return throwError(() => error);
         }),
       ),
@@ -99,7 +99,7 @@ export class AuthService {
     return await firstValueFrom(
       this.natsClient.send('auth.changePassword', changePasswordDto).pipe(
         timeout(5000), // 5 second timeout
-        catchError((error) => {
+        catchError(error => {
           return throwError(() => error);
         }),
       ),
@@ -111,7 +111,7 @@ export class AuthService {
     const user = await firstValueFrom(
       this.natsClient.send('auth.googleValidate', userData).pipe(
         timeout(5000), // 5 second timeout
-        catchError((error) => {
+        catchError(error => {
           return throwError(() => error);
         }),
       ),

@@ -43,4 +43,11 @@ export class AuthController {
   async handleGoogleValidate(@Payload() payload: GoogleUser) {
     return await this.authService.googleValidate(payload);
   }
+
+  // @MessagePattern('auth.verify-email')
+
+  // @MessagePattern('auth.logout')
+  // async handleLogout(@Payload() userId: string) {
+  //   return await this.authService.logout(userId);
+  // }
 }

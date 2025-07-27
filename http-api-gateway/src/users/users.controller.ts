@@ -6,4 +6,4 @@ export class UsersController {
   constructor(
     @Inject('NATS_SERVICE') private readonly natsClient: ClientProxy,
   ) {}
-};
+}

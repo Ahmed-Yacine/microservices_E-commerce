@@ -23,9 +23,9 @@ export const emailVerificationTemplate = (
           <div class="header">
             <h1 style="color: #28a745;">Verify Your Email</h1>
           </div>
-          
-          <p>Hello${userName ? ` ${userName}` : ''},</p>
-          
+
+          <p>Hello${userName ? ` ${userName}` : ' There'},</p>
+
           <p>Thank you for signing up! Please use the verification code below to verify your email address:</p>
           
           <div class="code-box">
