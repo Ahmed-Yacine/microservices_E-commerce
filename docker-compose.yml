@@ -10,7 +10,7 @@ services:
       - microservices-network
 
   users-db:
-    image: postgres
+    image: postgres:13
     container_name: users_postgres_db
     ports:
       - "5433:5432"
@@ -28,7 +28,7 @@ services:
       retries: 5
 
   products-db:
-    image: postgres
+    image: postgres:13
     container_name: products_postgres_db
     ports:
       - "5434:5432"
@@ -46,7 +46,7 @@ services:
       retries: 5
 
   payments-db:
-    image: postgres
+    image: postgres:13
     container_name: payments_postgres_db
     ports:
       - "5435:5432"
@@ -64,7 +64,7 @@ services:
       retries: 5
 
   orders-db:
-    image: postgres
+    image: postgres:13
     container_name: orders_postgres_db
     ports:
       - "5436:5432"
@@ -82,7 +82,7 @@ services:
       retries: 5
 
   notifications-db:
-    image: postgres
+    image: postgres:13
     container_name: notifications_postgres_db
     ports:
       - "5437:5432"
@@ -100,7 +100,7 @@ services:
       retries: 5
 
   inventories-db:
-    image: postgres
+    image: postgres:13
     container_name: inventories_postgres_db
     ports:
       - "5438:5432"
@@ -118,7 +118,7 @@ services:
       retries: 5
 
   filesUpload-db:
-    image: postgres
+    image: postgres:13
     container_name: filesUpload_postgres_db
     ports:
       - "5439:5432"
@@ -295,7 +295,7 @@ networks:
     driver: bridge
     driver_opts:
       com.docker.network.driver.mtu: 1450
-  
+
 volumes:
   users_postgres_data:
   products_postgres_data:

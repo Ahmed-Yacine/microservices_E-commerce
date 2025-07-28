@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
-import { RegisterDto } from './dtos/register.dto';
 import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
+import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { EmailDto } from './dtos/email.dto';
 import { LoginDto } from './dtos/login.dto';
+import { RegisterDto } from './dtos/register.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
 import { VerifyCodeDto } from './dtos/verificationCode.dto';
-import { ChangePasswordDto } from './dtos/changePassword.dto';
 import { GoogleUser } from './interfaces/google-user.interface';
 
 @Injectable()
@@ -15,6 +16,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
     @Inject('NATS_SERVICE') private readonly natsClient: ClientProxy,
   ) {}
+
+  async sendVerificationEmail(emailDto: EmailDto) {
+    // Generate a verification code (6-digit number)
+    this.natsClient.emit('auth.sendVerificationEmail', emailDto);
+  }
 
   async register(registerDto: RegisterDto) {
     // Send registration request to user microservice

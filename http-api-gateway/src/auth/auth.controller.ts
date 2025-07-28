@@ -11,6 +11,7 @@ import {
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { EmailDto } from './dtos/email.dto';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
@@ -23,11 +24,11 @@ import { GoogleUser } from './interfaces/google-user.interface';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Post('send-code')
-  // @HttpCode(HttpStatus.OK)
-  // async sendVerificationCode(@Body('email') email: string) {
-  //   return this.authService.sendVerificationCode(email);
-  // }
+  @Post('send-code')
+  @HttpCode(HttpStatus.OK)
+  async sendVerificationEmail(@Body() emailDto: EmailDto) {
+    return this.authService.sendVerificationEmail(emailDto);
+  }
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)

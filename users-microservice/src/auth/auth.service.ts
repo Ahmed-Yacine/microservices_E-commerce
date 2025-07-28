@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
-import { ResetPasswordDto } from './dtos/resetPassword.dto';
-import { UserRole } from './interfaces/user-role.enum';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { RegisterDto } from './dtos/register.dto';
-import { LoginDto } from './dtos/login.dto';
-import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
-import { VerifyCodeDto } from './dtos/verificationCode.dto';
-import { ChangePasswordDto } from './dtos/changePassword.dto';
-import { GoogleUser } from './interfaces/google-user.interface';
 import * as bcrypt from 'bcrypt';
+import { PrismaService } from 'src/database/prisma.service';
+import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { EmailDto } from './dtos/email.dto';
+import { LoginDto } from './dtos/login.dto';
+import { RegisterDto } from './dtos/register.dto';
+import { ResetPasswordDto } from './dtos/resetPassword.dto';
+import { VerifyCodeDto } from './dtos/verificationCode.dto';
+import { GoogleUser } from './interfaces/google-user.interface';
+import { UserRole } from './interfaces/user-role.enum';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +17,67 @@ export class AuthService {
     private readonly prismaService: PrismaService,
     @Inject('NATS_SERVICE') private readonly natsClient: ClientProxy,
   ) {}
+
+  async sendVerificationEmail(emailDto: EmailDto) {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { email: emailDto.email },
+      });
+
+      if (!user) {
+        throw new RpcException({
+          statusCode: 404,
+          message: 'User not found',
+          error: 'Not Found',
+        });
+      }
+
+      // Generate a verification code (6-digit number)
+      const verificationCode = Math.floor(
+        100000 + Math.random() * 900000,
+      ).toString();
+
+      // Emit an event to send verification code
+      this.natsClient.emit('sendVerificationEmail', {
+        email: emailDto.email,
+        code: verificationCode,
+      });
+
+      // Update the user's verification code
+      await this.prismaService.user.update({
+        where: { email: emailDto.email },
+        data: { verificationCode: verificationCode },
+      });
+    } catch (error) {
+      if (error instanceof RpcException) {
+        throw error;
+      }
+
+      if (error.name === 'ValidationError') {
+        throw new RpcException({
+          statusCode: 400,
+          message: error.message,
+          error: 'Bad Request',
+        });
+      }
+
+      // Handle Prisma errors
+      if (error.code === 'P2021') {
+        throw new RpcException({
+          statusCode: 500,
+          message: 'Database table does not exist. Please run migrations.',
+          error: 'Internal Server Error',
+        });
+      }
+
+      // Generic error
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Failed to send the verification code',
+        error: 'Internal Server Error',
+      });
+    }
+  }
 
   async register(registerDto: RegisterDto) {
     try {
@@ -166,27 +227,11 @@ export class AuthService {
         100000 + Math.random() * 900000,
       ).toString();
 
-      if (!verificationCode) {
-        throw new RpcException({
-          statusCode: 500,
-          message: 'Failed to generate reset code',
-          error: 'Internal Server Error',
-        });
-      }
-
-      await firstValueFrom(
-        this.natsClient
-          .emit('sent.verificationCode', {
-            email: resetPasswordDto.email,
-            verificationCode,
-          })
-          .pipe(
-            timeout(5000), // 5 second timeout
-            catchError(error => {
-              return throwError(() => error);
-            }),
-          ),
-      );
+      // Send verification code via email (fire-and-forget)
+      this.natsClient.emit('sent.verificationCode', {
+        email: resetPasswordDto.email,
+        verificationCode,
+      });
 
       // Update the user's verification code
       await this.prismaService.user.update({
@@ -210,10 +255,19 @@ export class AuthService {
         });
       }
 
+      // Handle Prisma errors
+      if (error.code === 'P2021') {
+        throw new RpcException({
+          statusCode: 500,
+          message: 'Database table does not exist. Please run migrations.',
+          error: 'Internal Server Error',
+        });
+      }
+
       // Generic error
       throw new RpcException({
         statusCode: 500,
-        message: 'Failed to sent the Verification code',
+        message: 'Failed to send the verification code',
         error: 'Internal Server Error',
       });
     }
